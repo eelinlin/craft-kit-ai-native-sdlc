@@ -1,0 +1,22 @@
+{
+  "name": "craft",
+  "displayName": "CRAFT Kit — core",
+  "version": "2.0.1",
+  "description": "The stack-neutral core of CRAFT Kit, the AI-native SDLC toolkit for Claude Code: intent → spec → plan → build → verify → review → ship → maintain, with artifact templates, review agents, guardrail hooks and a house output style.",
+  "author": {
+    "name": "Eelin"
+  },
+  "homepage": "https://github.com/eelinlin/craft-kit",
+  "repository": "https://github.com/eelinlin/craft-kit",
+  "license": "MIT",
+  "keywords": [
+    "ai-native-sdlc",
+    "craft",
+    "workflow",
+    "intent",
+    "spec",
+    "plan",
+    "review",
+    "hooks"
+  ]
+}

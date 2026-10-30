@@ -1,0 +1,35 @@
+name: Validate
+on:
+  pull_request:
+  push:
+    branches: [main, stable]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get install -y jq shellcheck
+      - name: JSON is valid
+        run: for f in $(git ls-files '*.json'); do jq empty "$f" || exit 1; done
+      - name: Plugin versions match the marketplace
+        run: |
+          for p in plugins/*/; do
+            n=$(jq -r .name "$p/.claude-plugin/plugin.json"); a=$(jq -r .version "$p/.claude-plugin/plugin.json")
+            b=$(jq -r --arg n "$n" '.plugins[] | select(.name==$n) | .version' .claude-plugin/marketplace.json)
+            [ "$a" = "$b" ] || { echo "$n: plugin.json $a != marketplace.json $b"; exit 1; }
+          done
+      - name: Shellcheck
+        run: shellcheck -S error plugins/*/scripts/*.sh tests/*.sh scripts/*.sh
+      - name: Hook tests
+        run: chmod +x plugins/*/scripts/*.sh tests/*.sh && tests/test-hooks.sh
+      - name: Band check tests
+        run: tests/test-bands.sh
+      - name: Customize script tests
+        run: tests/test-customize.sh
+      - name: Repository contract tests
+        run: tests/test-repository-contracts.sh
+      - name: Claude Code plugin validation
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          for p in plugins/*/; do claude plugin validate "$p"; done
+          claude plugin validate .

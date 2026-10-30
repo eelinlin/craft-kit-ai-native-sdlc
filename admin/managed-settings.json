@@ -1,0 +1,21 @@
+{
+  "extraKnownMarketplaces": {
+    "craft-kit": {
+      "source": { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "craft@craft-kit": true
+  },
+  "strictKnownMarketplaces": [
+    { "source": "github", "repo": "anthropics/claude-plugins-official" },
+    { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
+    { "source": "github", "repo": "eelinlin/craft-kit", "ref": "main" },
+    { "source": "skills-dir" }
+  ],
+  "permissions": {
+    "deny": ["Read(.env*)", "Read(./secrets/**)", "Read(**/*.pem)", "Read(**/*.key)"],
+    "disableBypassPermissionsMode": "disable"
+  }
+}

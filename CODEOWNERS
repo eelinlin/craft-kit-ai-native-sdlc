@@ -1,0 +1,5 @@
+# Replace with your GitHub users or teams (see docs/GOVERNANCE.md).
+*                         @eelinlin
+/plugins/*/hooks/         @eelinlin
+/plugins/*/scripts/       @eelinlin
+/admin/                   @eelinlin

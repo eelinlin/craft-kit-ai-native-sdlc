@@ -1,0 +1,17 @@
+# Stage 6 control bands. Detection is deterministic (scripts/check-bands.sh); no model involved.
+# Each metric reads a CSV of date,value in ops/metrics/<name>.csv — export from App Store Connect,
+# Xcode Organizer, or your CI, by hand or with a script, once a week.
+baseline_window: 8          # weeks
+tiers:
+  1sigma: log               # note it in ops/bands.log
+  2sigma: diagnose          # Claude reads evidence, explains likely cause, read-only
+  3sigma: propose           # Claude writes intent.md (Source: band-breach) and/or a fix PR
+metrics:
+  - name: crash_free_sessions
+    direction: lower_is_bad
+  - name: ci_failure_rate
+    direction: higher_is_bad
+  - name: app_store_rating
+    direction: lower_is_bad
+  - name: cold_start_ms
+    direction: higher_is_bad

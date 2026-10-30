@@ -1,0 +1,25 @@
+{
+  "extraKnownMarketplaces": {
+    "craft-kit": {
+      "source": { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "craft@craft-kit": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(make build)", "Bash(make test)", "Bash(make lint)",
+      "Bash(make screens)", "Bash(make verify)",
+      "Bash(git status*)", "Bash(git diff*)", "Bash(git log*)", "Bash(git add*)",
+      "Bash(git commit*)", "Bash(git switch*)", "Bash(git worktree*)"
+    ],
+    "ask": [
+      "Bash(git push*)", "Bash(gh pr create*)"
+    ],
+    "deny": [
+      "Read(.env*)", "Read(./secrets/**)", "Read(**/*.pem)", "Read(**/*.key)"
+    ]
+  }
+}

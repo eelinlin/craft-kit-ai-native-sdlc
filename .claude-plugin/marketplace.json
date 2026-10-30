@@ -1,0 +1,25 @@
+{
+  "name": "craft-kit",
+  "owner": {
+    "name": "Eelin"
+  },
+  "metadata": {
+    "description": "CRAFT Kit, the open-source AI-native SDLC toolkit for Claude Code: one workflow, one artifact format, one set of engineering gates."
+  },
+  "plugins": [
+    {
+      "name": "craft",
+      "source": "./plugins/sdlc",
+      "description": "Core workflow plugin for CRAFT Kit, the AI-native SDLC toolkit: stack-neutral commands, artifact templates, review agents and guardrail hooks.",
+      "version": "2.0.1",
+      "category": "development"
+    },
+    {
+      "name": "craft-mobile",
+      "source": "./plugins/sdlc-mobile",
+      "description": "Mobile extension for CRAFT Kit, the AI-native SDLC toolkit: iOS + Android engineering and store-release standards, with Swift/Kotlin formatting.",
+      "version": "2.0.0",
+      "category": "development"
+    }
+  ]
+}

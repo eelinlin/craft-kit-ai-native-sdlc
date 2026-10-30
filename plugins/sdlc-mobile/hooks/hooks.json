@@ -1,0 +1,13 @@
+{
+  "description": "Format the Swift or Kotlin file Claude just edited.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/format.sh" }
+        ]
+      }
+    ]
+  }
+}

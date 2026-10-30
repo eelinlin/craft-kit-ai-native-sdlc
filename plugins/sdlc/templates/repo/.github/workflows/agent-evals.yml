@@ -1,0 +1,19 @@
+# Re-run the agent eval suite when the agent's configuration changes, and nightly.
+name: Agent evals
+on:
+  pull_request:
+    paths: ['CLAUDE.md', 'REVIEW.md', '.claude/**', 'evals/**']
+  schedule:
+    - cron: '0 10 * * *'
+jobs:
+  evals:
+    runs-on: macos-15
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GH_TOKEN: ${{ secrets.PLUGIN_READ_TOKEN }}
+      CLAUDE_CODE_SYNC_PLUGIN_INSTALL: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - run: gh auth setup-git
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: ./evals/run.sh

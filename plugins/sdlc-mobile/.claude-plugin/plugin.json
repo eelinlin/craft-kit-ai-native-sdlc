@@ -1,0 +1,23 @@
+{
+  "name": "craft-mobile",
+  "displayName": "CRAFT Kit — mobile pack",
+  "version": "2.0.0",
+  "description": "iOS and Android extension for CRAFT Kit, the AI-native SDLC toolkit: mobile engineering, privacy and store-release standards, plus Swift/Kotlin auto-formatting.",
+  "author": {
+    "name": "Eelin"
+  },
+  "homepage": "https://github.com/eelinlin/craft-kit",
+  "repository": "https://github.com/eelinlin/craft-kit",
+  "license": "MIT",
+  "keywords": [
+    "ai-native-sdlc",
+    "craft",
+    "ios",
+    "android",
+    "swift",
+    "kotlin"
+  ],
+  "dependencies": [
+    "craft"
+  ]
+}
