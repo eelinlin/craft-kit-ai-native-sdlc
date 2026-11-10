@@ -1,7 +1,7 @@
 {
   "extraKnownMarketplaces": {
     "craft-kit": {
-      "source": { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
+      "source": { "source": "github", "repo": "eelinlin/craft-kit-ai-native-sdlc", "ref": "stable" },
       "autoUpdate": true
     }
   },

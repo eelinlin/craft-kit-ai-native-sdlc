@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The repository moved to `eelinlin/craft-kit-ai-native-sdlc`: install with
+  `/plugin marketplace add eelinlin/craft-kit-ai-native-sdlc`. The marketplace name stays `craft-kit`,
+  so `craft@craft-kit` and the uninstall commands are unchanged. Contract tests now check that the
+  manifest repository matches the git remote, so a GitHub rename fails CI until the docs follow.
 - Rebrand to CRAFT Kit: the repository is now `eelinlin/craft-kit` and the marketplace is `craft-kit`,
   so plugins install as `craft@craft-kit` and `craft-mobile@craft-kit`.
 - Fix install, uninstall and managed-settings references that pointed at a non-existent
