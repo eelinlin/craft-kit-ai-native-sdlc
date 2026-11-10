@@ -19,7 +19,7 @@ Three steps: install once per machine, set up each app repo once, then ship chan
 ### 1. Install (once per machine)
 In Claude Code:
 ```
-/plugin marketplace add eelinlin/craft-kit
+/plugin marketplace add eelinlin/craft-kit-ai-native-sdlc
 /plugin install craft@craft-kit
 /plugin install craft-mobile@craft-kit      # optional: iOS + Android pack (installs craft too)
 ```

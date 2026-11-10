@@ -1,7 +1,7 @@
 {
   "extraKnownMarketplaces": {
     "craft-kit": {
-      "source": { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
+      "source": { "source": "github", "repo": "eelinlin/craft-kit-ai-native-sdlc", "ref": "stable" },
       "autoUpdate": true
     }
   },
@@ -10,8 +10,8 @@
   },
   "strictKnownMarketplaces": [
     { "source": "github", "repo": "anthropics/claude-plugins-official" },
-    { "source": "github", "repo": "eelinlin/craft-kit", "ref": "stable" },
-    { "source": "github", "repo": "eelinlin/craft-kit", "ref": "main" },
+    { "source": "github", "repo": "eelinlin/craft-kit-ai-native-sdlc", "ref": "stable" },
+    { "source": "github", "repo": "eelinlin/craft-kit-ai-native-sdlc", "ref": "main" },
     { "source": "skills-dir" }
   ],
   "permissions": {

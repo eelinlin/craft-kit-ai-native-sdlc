@@ -108,6 +108,13 @@ repo=$(jq -r '.repository' "$core_manifest" | sed -E 's#^https://github.com/##; 
 plugins=$(jq -r '.plugins[].name' .claude-plugin/marketplace.json)
 sources=$(git ls-files -- . ':!tests' ':!CHANGELOG.md')
 
+# The manifest must name the GitHub repo this checkout came from, so renaming the repo on GitHub
+# fails CI until the docs follow. Skipped without a GitHub origin (e.g. a fresh copy).
+origin=$(git remote get-url origin 2>/dev/null | sed -nE 's#^(https://github\.com/|git@github\.com:)([^/]+/[^/]+)$#\2#p' | sed -E 's#\.git$##' || true)
+if [ -n "$origin" ]; then
+  [ "$repo" = "$origin" ] && pass "manifest repository matches git origin $origin" || bad "manifest repository $repo is not git origin $origin; run scripts/customize.sh --repo $origin"
+fi
+
 for manifest in plugins/*/.claude-plugin/plugin.json; do
   [ "$(jq -r '.repository' "$manifest")" = "https://github.com/$repo" ] && pass "$manifest repository is $repo" || bad "$manifest repository is not https://github.com/$repo"
 done
