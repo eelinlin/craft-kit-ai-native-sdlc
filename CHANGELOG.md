@@ -2,40 +2,47 @@
 
 ## Unreleased
 
-- craft 2.0.2: add the artifact templates (`templates/artifacts/intent.md`, `spec.md`, `plan.md`,
-  `pr.md`) that `/craft:kickoff`, `/craft:spec`, `/craft:plan`, `/craft:review` and artifact-standards
-  use. They were referenced but never shipped: `.gitignore`'s `artifacts/` rule (meant for build
-  output) matched `templates/artifacts/` too. The rule is now anchored to the repo root.
-- craft 2.0.2: the gates refuse the actions they check when `jq` is missing, instead of allowing
-  everything.
-- `/craft:init` CI workflows (Claude review, agent evals) only run `gh auth setup-git` when
-  `PLUGIN_READ_TOKEN` is set, so they no longer fail for public marketplaces.
-- Templates name the `craft` plugin instead of the old `sdlc` plugin.
-- Contract tests check that every `${CLAUDE_PLUGIN_ROOT}/…` file a skill names ships, that the PR
-  template copies match, and that workflow auth steps are guarded; the summary line no longer says
-  "passed" when a check failed.
+## 2.0.2 — 2026-11-10
 
-- The repository moved to `eelinlin/craft-kit-ai-native-sdlc`: install with
-  `/plugin marketplace add eelinlin/craft-kit-ai-native-sdlc`. The marketplace name stays `craft-kit`,
-  so `craft@craft-kit` and the uninstall commands are unchanged. Contract tests now check that the
-  manifest repository matches the git remote, so a GitHub rename fails CI until the docs follow.
-- Rebrand to CRAFT Kit: the repository is now `eelinlin/craft-kit` and the marketplace is `craft-kit`,
-  so plugins install as `craft@craft-kit` and `craft-mobile@craft-kit`.
-- Fix install, uninstall and managed-settings references that pointed at a non-existent
-  `eelinlin/ai-native-sdlc-kit` repository.
-- Fix the `/craft:init` settings template, which enabled a non-existent `sdlc` plugin instead of `craft`.
-- craft 2.0.1: close release-gate bypasses (`git push` with no refspec or `HEAD` while on a protected
-  branch, `+main`, `refs/heads/main`, `git -C <dir> push`).
-- craft 2.0.1: the plan-before-code gate now sees code committed with `git commit -a` / `--all`.
-- craft 2.0.1: the `/craft:init` config gates `task/` branches, matching the documented default.
-- craft 2.0.1: remove the core PostToolUse hook that ran a non-existent `format.sh` after every edit
-  (formatting lives in stack packs such as `craft-mobile`).
-- craft 2.0.1: hook messages and templates name `/craft:` commands instead of the old `/sdlc:` ones.
-- `check-bands.sh` no longer reads the CSV header row as a 0 data point, which raised false 3sigma
-  breaches on short histories.
-- `customize.sh` now works on macOS (its `sed \b` renames silently did nothing there).
-- Tests: new `tests/test-bands.sh` and `tests/test-customize.sh`; contract tests now check that hook
-  scripts exist, plugin and repo references match the marketplace, and `/craft:` commands exist.
+craft 2.0.2, craft-mobile 2.0.0. The first public release as **CRAFT Kit**.
+
+### Install
+- The repository is `eelinlin/craft-kit-ai-native-sdlc`; the marketplace is named `craft-kit`:
+  ```
+  /plugin marketplace add eelinlin/craft-kit-ai-native-sdlc
+  /plugin install craft@craft-kit
+  ```
+- Projects set up with `/craft:init` install from the new `stable` branch.
+- **Upgrading from an earlier address** (`eelinlin/craft-kit` or `eelinlin/ai-native-sdlc-kit`, which no
+  longer resolve): run `/plugin marketplace remove craft-kit`, then the two commands above.
+
+### Workflow
+- Ship the artifact templates `templates/artifacts/intent.md`, `spec.md`, `plan.md` and `pr.md`.
+  `/craft:kickoff`, `/craft:spec`, `/craft:plan`, `/craft:review` and artifact-standards use them, but
+  they were never committed: `.gitignore`'s `artifacts/` rule matched them. It now only ignores the
+  root `artifacts/` folder.
+- The `/craft:init` settings template enables `craft@craft-kit` (it named a non-existent `sdlc` plugin)
+  and gates `task/` branches, matching the documented default.
+- `/craft:init` CI workflows (Claude review, agent evals) only run `gh auth setup-git` when
+  `PLUGIN_READ_TOKEN` is set, so they work with a public marketplace.
+- Hook messages, templates and `/craft:init` name the `craft` plugin and `/craft:` commands
+  instead of the old `sdlc` ones.
+
+### Gates
+- Release gate: block pushes to a protected branch made with no refspec or `HEAD` while on that
+  branch, `+main`, `refs/heads/main`, or `git -C <dir> push`.
+- Plan-before-code gate: also check code committed with `git commit -a` / `-am` / `--all`.
+- Without `jq`, the gates refuse the actions they check instead of allowing everything.
+- Remove the core PostToolUse hook that ran a non-existent `format.sh` after every edit; formatting
+  lives in stack packs such as `craft-mobile`.
+
+### Tooling
+- `check-bands.sh` skips the CSV header instead of reading it as a 0 data point, which raised false
+  3sigma breaches on short histories.
+- `customize.sh` works on macOS; its `sed \b` renames silently did nothing there.
+- Tests: new `tests/test-bands.sh` and `tests/test-customize.sh`. Contract tests check that hook
+  scripts and every file a skill names are committed, that plugin, marketplace and repo names agree
+  with each other and with the git remote, and that `/craft:` commands and agents exist.
 
 ## 2.0.0 — 2026-10-29
 
