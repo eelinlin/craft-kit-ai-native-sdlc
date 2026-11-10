@@ -11,7 +11,7 @@
       "name": "craft",
       "source": "./plugins/sdlc",
       "description": "Core workflow plugin for CRAFT Kit, the AI-native SDLC toolkit: stack-neutral commands, artifact templates, review agents and guardrail hooks.",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "category": "development"
     },
     {

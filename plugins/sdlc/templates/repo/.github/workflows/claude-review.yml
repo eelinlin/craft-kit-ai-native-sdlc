@@ -23,12 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
-      - run: gh auth setup-git
+      - if: env.GH_TOKEN != ''   # only needed when the plugin marketplace repo is private
+        run: gh auth setup-git
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            Review this PR following REVIEW.md, with the sdlc plugin's artifact-standards skill and any
+            Review this PR following REVIEW.md, with the craft plugin's `craft:artifact-standards` skill and any
             standards skills enabled for this repo. Read CLAUDE.md and the intent/ folder named in the PR.
             Post findings as review comments tagged by pass and severity. Do not approve.
   respond:

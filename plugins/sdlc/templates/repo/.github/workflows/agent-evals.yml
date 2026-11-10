@@ -14,6 +14,7 @@ jobs:
       CLAUDE_CODE_SYNC_PLUGIN_INSTALL: "1"
     steps:
       - uses: actions/checkout@v4
-      - run: gh auth setup-git
+      - if: env.GH_TOKEN != ''   # only needed when the plugin marketplace repo is private
+        run: gh auth setup-git
       - run: npm install -g @anthropic-ai/claude-code
       - run: ./evals/run.sh

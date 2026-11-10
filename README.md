@@ -137,6 +137,7 @@ tests/                               gate, band, customize and repository contra
 
 ## Requirements
 Claude Code (recent version with plugins and output styles), `git`, `jq`, `bash`. `gh` for PRs.
+The gates need `jq`: without it they refuse the actions they check rather than let them through.
 
 ## Contributing
 Issues and PRs welcome, especially new stack packs (web, backend, data). See

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- craft 2.0.2: add the artifact templates (`templates/artifacts/intent.md`, `spec.md`, `plan.md`,
+  `pr.md`) that `/craft:kickoff`, `/craft:spec`, `/craft:plan`, `/craft:review` and artifact-standards
+  use. They were referenced but never shipped: `.gitignore`'s `artifacts/` rule (meant for build
+  output) matched `templates/artifacts/` too. The rule is now anchored to the repo root.
+- craft 2.0.2: the gates refuse the actions they check when `jq` is missing, instead of allowing
+  everything.
+- `/craft:init` CI workflows (Claude review, agent evals) only run `gh auth setup-git` when
+  `PLUGIN_READ_TOKEN` is set, so they no longer fail for public marketplaces.
+- Templates name the `craft` plugin instead of the old `sdlc` plugin.
+- Contract tests check that every `${CLAUDE_PLUGIN_ROOT}/…` file a skill names ships, that the PR
+  template copies match, and that workflow auth steps are guarded; the summary line no longer says
+  "passed" when a check failed.
+
 - The repository moved to `eelinlin/craft-kit-ai-native-sdlc`: install with
   `/plugin marketplace add eelinlin/craft-kit-ai-native-sdlc`. The marketplace name stays `craft-kit`,
   so `craft@craft-kit` and the uninstall commands are unchanged. Contract tests now check that the

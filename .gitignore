@@ -1,4 +1,4 @@
 .claude/state/
-artifacts/
+/artifacts/
 *.bak
 .DS_Store

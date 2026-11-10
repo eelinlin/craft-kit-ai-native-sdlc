@@ -82,6 +82,41 @@ while IFS= read -r -d '' markdown_file; do
   done < <(grep -oE '\\]\\([^)]*\\)' "$markdown_file" | sed -E 's/^\\]\\(([^)]*)\\)$/\\1/')
 done < <(find README.md docs plugins -type f -name '*.md' -print0)
 
+echo "== plugin file references resolve"
+# Skills, agents and output styles name files as ${CLAUDE_PLUGIN_ROOT}/<path>; each must ship in the plugin.
+while IFS=$'\t' read -r name source; do
+  source="${source#./}"
+  while IFS= read -r ref; do
+    [ -z "$ref" ] && continue
+    path="$source/${ref#\$\{CLAUDE_PLUGIN_ROOT\}/}"
+    path="${path%.}"
+    # Tracked, not just on disk: .gitignore once hid templates/artifacts/ from every commit.
+    if [ -n "$(git ls-files -- "$path")" ]; then
+      pass "$name ships $ref"
+    elif [ -e "$path" ]; then
+      bad "$name references $path, which exists but isn't committed (check .gitignore)"
+    else
+      bad "$name references a missing file: $path"
+    fi
+  done < <(grep -rhoE '\$\{CLAUDE_PLUGIN_ROOT\}/[A-Za-z0-9_./-]+' "$source/skills" "$source/agents" "$source/output-styles" 2>/dev/null | sort -u || true)
+done < <(jq -r '.plugins[] | [.name, .source] | @tsv' .claude-plugin/marketplace.json)
+
+echo "== templates"
+# The PR template a repo gets from /craft:init and the one /craft:review fills must be the same.
+if cmp -s plugins/sdlc/templates/artifacts/pr.md plugins/sdlc/templates/repo/.github/pull_request_template.md; then
+  pass "artifacts/pr.md matches the repo PR template"
+else
+  bad "artifacts/pr.md differs from templates/repo/.github/pull_request_template.md"
+fi
+# Workflows must still run for public marketplaces, where PLUGIN_READ_TOKEN isn't set.
+while IFS= read -r workflow; do
+  if grep -B1 'gh auth setup-git' "$workflow" | grep -q "if: env.GH_TOKEN != ''"; then
+    pass "$workflow only sets up git auth when a token is set"
+  else
+    bad "$workflow runs gh auth setup-git without checking GH_TOKEN"
+  fi
+done < <(grep -rl 'gh auth setup-git' plugins/*/templates || true)
+
 echo "== hook commands resolve"
 # Every hook command must point at a script that ships in the plugin and is executable in git.
 while IFS=$'\t' read -r name source; do
@@ -153,5 +188,5 @@ while IFS= read -r ref; do
   fi
 done < <(echo "$sources" | xargs grep -ohE '/[a-z][a-z-]*:[a-z][a-z-]*|`[a-z][a-z-]*:[a-z][a-z-]*`' | sort -u)
 
-echo "all $checks repository contract checks passed"
+if [ "$fail" -eq 0 ]; then echo "all $checks repository contract checks passed"; else echo "repository contract checks failed"; fi
 [ "$fail" -eq 0 ]
