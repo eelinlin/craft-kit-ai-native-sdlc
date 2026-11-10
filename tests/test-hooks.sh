@@ -117,6 +117,19 @@ expect 0 require-artifacts.sh "$(run 'git commit -m feat')"           "allow: no
 expect 0 require-artifacts.sh "$(run 'git commit --amend --no-edit')" "allow: --amend is not --all"
 git checkout -q -- src/a.ts
 
+echo "== require-artifacts (shipped templates)"
+TPL="$ROOT/plugins/sdlc/templates/artifacts"
+git switch -q -c feature/PROJ-321-templates
+mkdir -p intent/PROJ-321-templates src && cp "$TPL/intent.md" intent/PROJ-321-templates/intent.md
+echo y > src/b.ts && git add src/b.ts
+expect 2 require-artifacts.sh "$(run 'git commit -m feat')"           "block: intent template starts as draft"
+out=$("$S/session-context.sh" </dev/null); n=$((n+1))
+[[ "$out" == *"intent Status: draft"* ]] && echo "ok   session reads the template's draft status" || { echo "FAIL template status: $out"; fail=1; }
+sed -i.bak 's/Status: draft/Status: accepted/' intent/PROJ-321-templates/intent.md && rm intent/PROJ-321-templates/intent.md.bak
+cp "$TPL/plan.md" intent/PROJ-321-templates/plan.ios.md
+expect 0 require-artifacts.sh "$(run 'git commit -m feat')"           "allow: accepted template intent + plan template"
+git reset -q; rm -rf intent/PROJ-321-templates src/b.ts
+
 echo "== session-context"
 git switch -q feature/PROJ-123-chat-history
 out=$("$S/session-context.sh" </dev/null); n=$((n+1))
@@ -128,6 +141,16 @@ out=$("$S/session-context.sh" </dev/null); n=$((n+1))
 echo "== mobile pack format hook"
 n=$((n+1))
 edit /r/x.swift | "$ROOT/plugins/sdlc-mobile/scripts/format.sh" && echo "ok   format hook exits 0 without formatters" || { echo "FAIL format"; fail=1; }
+
+echo "== gates without jq fail closed"
+nojq="$CLAUDE_PROJECT_DIR/.nojq"; mkdir -p "$nojq"
+for tool in bash git sed grep cat dirname paste ls mkdir date head tr; do ln -sf "$(command -v "$tool")" "$nojq/$tool"; done
+PATH="$nojq" expect 2 release-gate.sh      "$(run 'git push origin main')" "release-gate blocks without jq"
+PATH="$nojq" expect 2 protect-paths.sh     "$(edit /r/.env)"               "protect-paths blocks without jq"
+PATH="$nojq" expect 2 require-artifacts.sh "$(run 'git commit -m x')"      "require-artifacts blocks without jq"
+n=$((n+1))
+msg=$(run 'ls' | PATH="$nojq" "$S/release-gate.sh" 2>&1 >/dev/null)
+[[ "$msg" == *"need jq"* ]] && echo "ok   explains that jq is missing" || { echo "FAIL jq message: $msg"; fail=1; }
 
 rm -rf "$CLAUDE_PROJECT_DIR"
 [ $fail = 0 ] && echo "all $n hook tests passed"

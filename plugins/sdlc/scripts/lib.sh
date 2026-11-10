@@ -1,6 +1,14 @@
 #!/bin/bash
 # Shared helpers for the sdlc hooks. Every rule is configurable per repo in .claude/sdlc.json;
 # anything not set there falls back to the defaults below.
+
+# The gates read the tool call with jq. Without it they can't tell what's being run, so they refuse
+# rather than let everything through.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Blocked: the CRAFT gates need jq to check this action, and jq isn't installed. Install it (macOS: brew install jq; Debian/Ubuntu: sudo apt-get install jq) and try again." >&2
+  exit 2
+fi
+
 PROJECT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 CONFIG="$PROJECT/.claude/sdlc.json"
 
